@@ -23,11 +23,57 @@ var LineUpGlobal = {
  * @param spec.storage - a LineUp Storage, see {@link LineUpLocalStorage}
  * @constructor
  */
+ lineuplogger = {}
+
 var LineUp = function(spec){
     this.storage = spec.storage;
     this.sortedColumn = [];
 
+    // added declarations and initialization for logging during execution
+    //this.LoggingLocation = "http://10.1.90.46:1337"
+    this.LoggingLocation = "http://stuff:1337"
+    this.testMode = true;
+    this.echoLogsToConsole = true;
+    lineuplogger.ac = new activityLogger().echo(this.echoLogsToConsole).testing(this.testMode);
+    lineuplogger.ac.registerActivityLogger(this.LoggingLocation, "Kitware_LineUp_Web", "1.0");
+    console.log("constructor called")
+
 };
+
+//  declarations of logging routines
+
+function logDragStarted(d) {
+        lineuplogger.ac.logUserActivity("drag_started: "+d, "drag_started", lineuplogger.ac.WF_EXPLORE);
+}
+
+
+function logDragged(d) {
+        lineuplogger.ac.logUserActivity("dragged: "+d.header, "dragged", lineuplogger.ac.WF_EXPLORE);
+}
+
+function logDragEnded(d) {
+        lineuplogger.ac.logUserActivity("drag_ended: "+d, "drag_ended", lineuplogger.ac.WF_EXPLORE);
+}
+
+
+function logDragEnd(d) {
+    for (var prop in d) {
+        console.log("prop: "+prop)
+    }  
+    lineuplogger.ac.logUserActivity("drag_end: "+d, "drag_dragged", lineuplogger.ac.WF_EXPLORE);
+}
+
+
+function logUpdateHeader(d) {
+    for (var prop in d) {
+        console.log("prop: "+prop)
+    }  
+         lineuplogger.ac.logUserActivity("updateHeader: "+d, "update_header", lineuplogger.ac.WF_EXPLORE);
+}
+
+function logLevel2Header(d) {
+         lineuplogger.ac.logUserActivity("update_level2header: "+d, "update_level2header", lineuplogger.ac.WF_EXPLORE);
+}
 
 /**
  * the function to start the LineUp visualization
@@ -62,14 +108,15 @@ LineUp.prototype.updateHeader = function(headers){
     function dragstarted(d) {
         d3.event.sourceEvent.stopPropagation();
         d3.select(this).classed("dragging", true);
+        logDragStarted(d);
     }
-
 
     function dragged(d) {
         var newValue = Math.max(d3.mouse(this.parentNode)[0],2);
 //       d3.select(this).attr("cx", d.x = newValue );
        that.reweightHeader({column:d3.select(this).data()[0], value:newValue})
         that.updateBody(that.storage.getColumnHeaders(),that.storage.getData())
+         logDragged(d);
     }
 
     function dragended(d) {
@@ -77,6 +124,7 @@ LineUp.prototype.updateHeader = function(headers){
         if (that.sortedColumn instanceof LineUpStackedColumn){
             that.storage.resortData({columnID: that.sortedColumn.id});
             that.updateBody(that.storage.getColumnHeaders(), that.storage.getData());
+            logDragEnded(d);
         }
     }
 
@@ -100,6 +148,7 @@ LineUp.prototype.updateHeader = function(headers){
             that.updateBody(that.storage.getColumnHeaders(), that.storage.getData());
             that.sortedColumn= d.header;
             that.updateHeader(that.storage.getColumnHeaders());
+            logUpdateHeader(d);
         }
     });
 
@@ -188,6 +237,7 @@ LineUp.prototype.updateHeader = function(headers){
             that.updateBody(that.storage.getColumnHeaders(), that.storage.getData())
             that.sortedColumn= d.header;
             that.updateHeader(that.storage.getColumnHeaders())
+            logLevel2Header(d)
         }
 
     });
@@ -281,7 +331,7 @@ LineUp.prototype.reweightHeader= function(change){
  */
 LineUp.prototype.updateBody = function(headers, data){
 
-    console.log("DDD",data);
+   // console.log("DDD",data);
 
     var offset = 0;
     var headerInfo =  d3.map();
