@@ -30,8 +30,8 @@ var LineUp = function(spec){
     this.sortedColumn = [];
 
     // added declarations and initialization for logging during execution
-    //this.LoggingLocation = "http://10.1.90.46:1337"
-    this.LoggingLocation = "http://stuff:1337"
+    this.LoggingLocation = "http://10.1.90.46:1337"
+    //this.LoggingLocation = "http://stuff:1337"
     this.testMode = true;
     this.echoLogsToConsole = true;
     lineuplogger.ac = new activityLogger().echo(this.echoLogsToConsole).testing(this.testMode);
