@@ -43,36 +43,30 @@ var LineUp = function(spec){
 //  declarations of logging routines
 
 function logDragStarted(d) {
-        lineuplogger.ac.logUserActivity("drag_started: "+d, "drag_started", lineuplogger.ac.WF_EXPLORE);
+        lineuplogger.ac.logUserActivity("drag_started: "+d.header.label, "drag_started", lineuplogger.ac.WF_EXPLORE);
 }
 
 
 function logDragged(d) {
-        lineuplogger.ac.logUserActivity("dragged: "+d.header, "dragged", lineuplogger.ac.WF_EXPLORE);
+        lineuplogger.ac.logUserActivity("dragged: "+d.header.label, "dragged", lineuplogger.ac.WF_EXPLORE);
 }
 
 function logDragEnded(d) {
-        lineuplogger.ac.logUserActivity("drag_ended: "+d, "drag_ended", lineuplogger.ac.WF_EXPLORE);
+        lineuplogger.ac.logUserActivity("drag_ended: "+d.header.label, "drag_ended", lineuplogger.ac.WF_EXPLORE);
 }
 
 
 function logDragEnd(d) {
-    for (var prop in d) {
-        console.log("prop: "+prop)
-    }  
-    lineuplogger.ac.logUserActivity("drag_end: "+d, "drag_dragged", lineuplogger.ac.WF_EXPLORE);
+    lineuplogger.ac.logUserActivity("drag_end: "+d.header.label, "drag_dragged", lineuplogger.ac.WF_EXPLORE);
 }
 
 
 function logUpdateHeader(d) {
-    for (var prop in d) {
-        console.log("prop: "+prop)
-    }  
-         lineuplogger.ac.logUserActivity("updateHeader: "+d, "update_header", lineuplogger.ac.WF_EXPLORE);
+         lineuplogger.ac.logUserActivity("updateHeader: "+d.header.label, "update_header", lineuplogger.ac.WF_EXPLORE);
 }
 
 function logLevel2Header(d) {
-         lineuplogger.ac.logUserActivity("update_level2header: "+d, "update_level2header", lineuplogger.ac.WF_EXPLORE);
+         lineuplogger.ac.logUserActivity("update_level2header: "+d.header.label, "update_level2header", lineuplogger.ac.WF_EXPLORE);
 }
 
 /**
